@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Speed Word - Juego de Escritura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        #entradaEditable span.correcto {
+          color: green;
+        }
+
+        #entradaEditable span.incorrecto {
+          color: red;
+        }
+
+        #entradaEditable {
+          white-space: pre-wrap;
+          outline: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+<div class="max-w-3xl w-full bg-white rounded-2xl shadow-lg p-6 space-y-4">
+    <h1 class="text-3xl font-bold text-center text-blue-600">Speed Word 🧠💻</h1>
+
+    <div class="border border-gray-300 rounded p-3 bg-gray-50 font-mono text-sm whitespace-pre-wrap text-gray-700" id="textoAMostrar">
+        <!-- Aquí se mostrará el código -->
+    </div>
+
+    <div
+            id="entradaEditable"
+            class="w-full min-h-[180px] p-3 border-2 border-gray-300 rounded text-gray-800 font-mono text-sm bg-white"
+            contenteditable="true"
+            spellcheck="false"
+    ></div>
+
+    <div class="flex justify-between items-center">
+        <p class="text-sm text-gray-600">Tiempo: <span id="tiempo">0</span> segundos</p>
+        <button id="reiniciar" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Reiniciar</button>
+    </div>
+</div>
+
+<script src="main.js"></script>
+</body>
+</html>
