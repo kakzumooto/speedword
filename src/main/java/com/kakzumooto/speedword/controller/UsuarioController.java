@@ -1,9 +1,10 @@
 package com.kakzumooto.speedword.controller;
 
-
 import com.kakzumooto.speedword.model.Usuario;
 import com.kakzumooto.speedword.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,17 +24,17 @@ public class UsuarioController {
     }
 
     @PostMapping("/login")
-    public Optional<Usuario> login(@RequestBody Usuario usuario){
+    public ResponseEntity<Usuario> login(@RequestBody Usuario usuario){
         String nombre = usuario.getNombreUsuario();
         String pass = usuario.getPassword();
-        return usuarioService.login(nombre, pass);
+        Optional<Usuario> encontrado = usuarioService.login(nombre, pass);
+
+        return encontrado
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
-
-
-
-
-    @PutMapping("/{id},record")
+    @PutMapping("/{id}/record")
     public Usuario actualizarRecord(@PathVariable Long id, @RequestParam double nuevoRecord){
         return usuarioService.guardarRecord(id, nuevoRecord);
     }
@@ -42,9 +43,4 @@ public class UsuarioController {
     public List<Usuario> topUsuarios(){
         return usuarioService.obtenerTop10();
     }
-
-
-
-
-
 }
