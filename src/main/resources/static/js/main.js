@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
   ];
 
   let nivelActual = 0;
-  let textoActual = niveles[nivelActual];
   let segundos = 0;
   let intervalo;
   let tiempoIniciado = false;
@@ -38,8 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function cargarNivel() {
-    textoActual = niveles[nivelActual];
-    textoAMostrar.textContent = textoActual;
+    textoAMostrar.textContent = niveles[nivelActual];
     entradaEditable.innerHTML = '';
     entradaEditable.focus();
     entradaEditable.setAttribute("contenteditable", "true");
@@ -53,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let errorEncontrado = false;
 
       for (let i = 0; i < input.length; i++) {
-        if (!errorEncontrado && input[i] === textoActual[i]) {
+        if (!errorEncontrado && input[i] === niveles[nivelActual][i]) {
           resultado += `<span class="correcto">${input[i]}</span>`;
         } else {
           errorEncontrado = true;
@@ -64,10 +62,10 @@ document.addEventListener("DOMContentLoaded", () => {
       entradaEditable.innerHTML = resultado;
       colocarCursorAlFinal(entradaEditable);
 
-      if (input === textoActual) {
+      if (input === niveles[nivelActual]) {
         nivelActual++;
         if (nivelActual < niveles.length) {
-          alert("¡Nivel superado! Vamos al siguiente...");
+         mostrarMensaje("¡Nivel superado! Vamos al siguiente...", "info");
           cargarNivel();
         } else {
           clearInterval(intervalo);
@@ -117,7 +115,6 @@ document.addEventListener("DOMContentLoaded", () => {
     clearInterval(intervalo);
     tiempoSpan.textContent = 0;
     cargarNivel();
-    entradaEditable.setAttribute("contenteditable", "true");
   });
 
   enviarRegistro.addEventListener("click", async () => {
@@ -125,67 +122,47 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = passwordInput.value.trim();
 
     if (!nombreUsuario || !password) {
-      alert("Por favor ingresa un nombre de usuario y contraseña.");
+      mostrarMensaje("Por favor ingresa un nombre de usuario y contraseña.", "advertencia");
       return;
     }
 
+    const datosUsuario = {
+      nombreUsuario,
+      password,
+      recordSegundos: segundos
+    };
+
     try {
-      let response = await fetch("/api/usuarios/login", {
+      const response = await fetch("/api/usuarios/guardar-record", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nombreUsuario, password })
+        body: JSON.stringify(datosUsuario)
       });
 
-      let usuario;
-      if (response.ok) {
-        usuario = await response.json();
-      } else {
-        response = await fetch("/api/usuarios/registro", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ nombreUsuario, password })
-        });
-
-        if (!response.ok) {
-          alert("Error al registrar usuario.");
-          return;
-        }
-
-        usuario = await response.json();
-      }
-
-      // Guardar nuevo récord
-      const nuevoRecord = segundos;
-      const actualizarRecord = await fetch(`/api/usuarios/${usuario.id}/record?nuevoRecord=${nuevoRecord}`, {
-        method: "PUT"
-      });
-
-      if (!actualizarRecord.ok) {
-        alert("Hubo un error al guardar tu récord.");
+      if (!response.ok) {
+        mostrarMensaje("Hubo un error al guardar tu récord.", "error");
         return;
       }
 
-      // Verificar si el usuario quedó en el top 10
-      const topResponse = await fetch("/api/usuarios/top");
-      const topUsuarios = await topResponse.json();
-
-      const esNuevoTop = topUsuarios.some(u => u.id === usuario.id);
-      const recordAnterior = usuario.recordSegundos;
+      const resultado = await response.json();
+      const esNuevoTop = resultado.top;
+      const rompisteRecord = resultado.rompisteRecord;
 
       if (esNuevoTop) {
-        alert("¡Felicidades! Has entrado al Top 10.");
-      } else if (recordAnterior && nuevoRecord < recordAnterior) {
-        alert("¡Has roto tu récord!");
+        mostrarMensaje("¡Felicidades! Has entrado al Top 10.", "exito");
+      } else if (rompisteRecord) {
+        mostrarMensaje("¡Has roto tu récord!", "exito");
       } else {
-        alert("¡Récord guardado exitosamente!");
+        mostrarMensaje("¡Récord guardado exitosamente!", "info");
       }
 
       entradaEditable.setAttribute("contenteditable", "false");
     } catch (error) {
       console.error("Error al guardar récord:", error);
-      alert("Hubo un error al guardar tu récord.");
+      mostrarMensaje("Hubo un error al guardar tu récord.", "error");
     }
   });
+
 
   async function cargarTopUsuarios() {
     try {
@@ -193,28 +170,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!response.ok) throw new Error("Error al obtener el top");
       const topUsuarios = await response.json();
 
-      const listaTop = document.getElementById("listaTop");
-      if (listaTop) {
-        listaTop.innerHTML = "";
-        topUsuarios.forEach((usuario, index) => {
-          const li = document.createElement("li");
-          li.textContent = `${usuario.nombreUsuario} - ${usuario.recordSegundos} segundos`;
-          listaTop.appendChild(li);
-        });
-        document.getElementById("topUsuarios").classList.remove("hidden");
-      }
-    } catch (error) {
-      console.error("Error al cargar el top:", error);
-    }
-  }
-
-  btnTop.addEventListener("click", async () => {
-    try {
-      const response = await fetch("/api/usuarios/top");
-      const usuariosTop = await response.json();
-
       topList.innerHTML = "";
-      usuariosTop.forEach((usuario, index) => {
+      topUsuarios.forEach((usuario, index) => {
         const row = document.createElement("tr");
         row.innerHTML = `
           <td class="border-b p-2">${index + 1}</td>
@@ -223,19 +180,40 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
         topList.appendChild(row);
       });
-
-      modalTop.classList.remove("hidden");
     } catch (error) {
-      console.error("Error al obtener el Top 10:", error);
-      alert("Hubo un error al cargar el Top 10.");
+      console.error("Error al cargar el top:", error);
     }
+  }
+
+  btnTop.addEventListener("click", () => {
+    cargarTopUsuarios().then(() => {
+      modalTop.classList.remove("hidden");
+    });
   });
 
   cerrarModal.addEventListener("click", () => {
     modalTop.classList.add("hidden");
   });
 
+  function mostrarMensaje(mensaje, tipo = "info") {
+    const noti = document.getElementById("notificacion");
+    noti.textContent = mensaje;
 
+    const colores = {
+      info: "bg-blue-500",
+      exito: "bg-green-500",
+      error: "bg-red-500",
+      advertencia: "bg-yellow-500"
+    };
+
+    // Limpiar clases y agregar la del tipo
+    noti.className = `fixed bottom-5 left-1/2 transform -translate-x-1/2 text-white px-4 py-2 rounded shadow-lg z-50 ${colores[tipo]}`;
+    noti.classList.remove("hidden");
+
+    setTimeout(() => {
+      noti.classList.add("hidden");
+    }, 3000);
+  }
 
 
   cargarNivel();

@@ -6,7 +6,6 @@
     <title>Speed Word - Juego de Escritura</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
-
     <style>
         #entradaEditable span.correcto {
             color: green;
@@ -28,7 +27,7 @@
     <h1 class="text-3xl font-bold text-center text-blue-600">Speed Word 🧠💻</h1>
 
     <div class="border border-gray-300 rounded p-3 bg-gray-50 font-mono text-sm whitespace-pre-wrap text-gray-700" id="textoAMostrar">
-        <!-- Aquí se mostrará el código -->
+        <!-- Código del nivel actual -->
     </div>
 
     <div
@@ -44,24 +43,18 @@
     </div>
 </div>
 
-<!-- Formulario de Registro al terminar -->
+<!-- Formulario de Registro -->
 <div id="registroForm" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden">
     <div class="bg-white rounded-xl shadow-lg p-6 w-96 space-y-4 text-center">
         <h2 class="text-xl font-semibold text-blue-600">Guardar récord</h2>
         <input type="text" id="usuarioInput" placeholder="Nombre de usuario" class="w-full p-2 border rounded text-gray-800" />
         <input type="password" id="passwordInput" placeholder="Contraseña" class="w-full p-2 border rounded text-gray-800" />
-        <button id="enviarRegistro" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-            Enviar
-        </button>
-
-        <!-- Botón para volver a jugar (inicialmente oculto) -->
-        <button id="reiniciarFinal" class="hidden mt-4 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
-            Volver a jugar
-        </button>
+        <button id="enviarRegistro" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Enviar</button>
+        <button id="reiniciarFinal" class="hidden mt-4 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Volver a jugar</button>
     </div>
 </div>
 
-<!-- Botón flotante para ver el Top 10 -->
+<!-- Botón flotante para Top 10 -->
 <button id="btnTop" class="fixed top-4 right-4 bg-yellow-400 p-3 rounded-full shadow-lg text-white hover:bg-yellow-500 z-50">
     <i class="fas fa-trophy"></i>
 </button>
@@ -78,14 +71,31 @@
                 <th class="border-b p-2">Record</th>
             </tr>
             </thead>
-            <tbody id="topList">
-            <!-- Se llena desde JS -->
-            </tbody>
+            <tbody id="topList"></tbody>
         </table>
         <button id="cerrarModal" class="mt-4 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">Cerrar</button>
     </div>
 </div>
 
+<div id="notificacion" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow-lg hidden z-50"></div>
+<!-- Modal de Bienvenida -->
+<div id="welcomeModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+    <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-md text-center space-y-4">
+        <h2 class="text-2xl font-bold text-gray-800">👋 ¡Bienvenido a Speed Word!</h2>
+        <p class="text-gray-600">🕹️ Escribe el código que aparece en pantalla lo más rápido posible. Si te equivocas, deberás corregir el error antes de continuar.</p>
+        <p class="text-gray-600">⏱️ El tiempo total se acumula durante los 5 niveles. ¡Entre más rápido y preciso seas, mejor!</p>
+        <p class="text-gray-600">🏆 Al final, podrás registrarte para ver si entraste al Top 10 o si rompiste tu récord anterior.</p>
+        <button onclick="cerrarModal()" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
+            ¡Entendido!
+        </button>
+    </div>
+</div>
+
+<script>
+    function cerrarModal() {
+      document.getElementById("welcomeModal").style.display = "none";
+    }
+</script>
 
 
 

@@ -48,28 +48,33 @@ public class UsuarioServiceImpl implements UsuarioService {
     public Map<String, Object> registrarOActualizarUsuario(Usuario usuarioNuevo) {
         Map<String, Object> respuesta = new HashMap<>();
         boolean esNuevoRecord = false;
+        Usuario usuarioGuardado;
 
         Usuario usuarioExistente = usuarioRepository.findByNombreUsuario(usuarioNuevo.getNombreUsuario())
                 .orElse(null);
 
         if (usuarioExistente == null) {
             usuarioNuevo.setFechaRecord(LocalDateTime.now());
-            usuarioRepository.save(usuarioNuevo);
+            usuarioGuardado = usuarioRepository.save(usuarioNuevo);
             esNuevoRecord = true;
         } else if (usuarioNuevo.getRecordSegundos() < usuarioExistente.getRecordSegundos()) {
             usuarioExistente.setRecordSegundos(usuarioNuevo.getRecordSegundos());
             usuarioExistente.setFechaRecord(LocalDateTime.now());
-            usuarioRepository.save(usuarioExistente);
+            usuarioGuardado = usuarioRepository.save(usuarioExistente);
             esNuevoRecord = true;
+        } else {
+            usuarioGuardado = usuarioExistente;
         }
 
+        // Ahora sí buscamos en el top10 ya guardado
         List<Usuario> top10 = usuarioRepository.findTop10ByOrderByRecordSegundosAsc();
         boolean estaEnTop10 = top10.stream()
-                .anyMatch(u -> u.getNombreUsuario().equals(usuarioNuevo.getNombreUsuario()));
+                .anyMatch(u -> u.getNombreUsuario().equals(usuarioGuardado.getNombreUsuario()));
 
-        respuesta.put("mensaje", esNuevoRecord ? "Record actualizado" : "No fue un nuevo récord");
-        respuesta.put("enTop10", estaEnTop10);
+        respuesta.put("rompisteRecord", esNuevoRecord);
+        respuesta.put("top", estaEnTop10);
 
         return respuesta;
     }
+
 }

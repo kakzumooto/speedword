@@ -34,6 +34,13 @@ public class UsuarioController {
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
+    @PostMapping("/guardar-record")
+    public ResponseEntity<Map<String, Object>> guardarRecordAutomatico(@RequestBody Usuario usuarioNuevo) {
+        Map<String, Object> respuesta = usuarioService.registrarOActualizarUsuario(usuarioNuevo);
+        return ResponseEntity.ok(respuesta);
+    }
+
+
     @PutMapping("/{id}/record")
     public Usuario actualizarRecord(@PathVariable Long id, @RequestParam double nuevoRecord){
         return usuarioService.guardarRecord(id, nuevoRecord);
