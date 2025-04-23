@@ -4,7 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Speed Word - Juego de Escritura</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
         #entradaEditable span.correcto {
             color: green;
@@ -21,6 +23,7 @@
     </style>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
 <div class="max-w-3xl w-full bg-white rounded-2xl shadow-lg p-6 space-y-4">
     <h1 class="text-3xl font-bold text-center text-blue-600">Speed Word 🧠💻</h1>
 
@@ -41,24 +44,49 @@
     </div>
 </div>
 
+<!-- Formulario de Registro al terminar -->
 <div id="registroForm" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden">
     <div class="bg-white rounded-xl shadow-lg p-6 w-96 space-y-4 text-center">
         <h2 class="text-xl font-semibold text-blue-600">Guardar récord</h2>
-        <input type="text" id="usuarioInput" placeholder="Nombre de usuario"
-               class="w-full p-2 border rounded text-gray-800" />
-        <input type="password" id="passwordInput" placeholder="Contraseña"
-               class="w-full p-2 border rounded text-gray-800" />
+        <input type="text" id="usuarioInput" placeholder="Nombre de usuario" class="w-full p-2 border rounded text-gray-800" />
+        <input type="password" id="passwordInput" placeholder="Contraseña" class="w-full p-2 border rounded text-gray-800" />
         <button id="enviarRegistro" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
             Enviar
         </button>
 
         <!-- Botón para volver a jugar (inicialmente oculto) -->
-        <button id="reiniciarFinal"
-                class="hidden mt-4 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
+        <button id="reiniciarFinal" class="hidden mt-4 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">
             Volver a jugar
         </button>
     </div>
 </div>
+
+<!-- Botón flotante para ver el Top 10 -->
+<button id="btnTop" class="fixed top-4 right-4 bg-yellow-400 p-3 rounded-full shadow-lg text-white hover:bg-yellow-500 z-50">
+    <i class="fas fa-trophy"></i>
+</button>
+
+<!-- Modal Top 10 -->
+<div id="modalTop" class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden justify-center items-center z-40">
+    <div class="bg-white p-6 rounded-lg w-96">
+        <h2 class="text-2xl font-semibold mb-4">Top 10 Usuarios</h2>
+        <table id="tablaTop" class="min-w-full border-collapse">
+            <thead>
+            <tr>
+                <th class="border-b p-2">Posición</th>
+                <th class="border-b p-2">Usuario</th>
+                <th class="border-b p-2">Record</th>
+            </tr>
+            </thead>
+            <tbody id="topList">
+            <!-- Se llena desde JS -->
+            </tbody>
+        </table>
+        <button id="cerrarModal" class="mt-4 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">Cerrar</button>
+    </div>
+</div>
+
+
 
 
 <script src="js/main.js"></script>

@@ -7,8 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -19,8 +18,9 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @PostMapping("/registro")
-    public Usuario registrar(@RequestBody Usuario usuario){
-        return usuarioService.registrar(usuario);
+    public ResponseEntity<Map<String, Object>> registrarUsuario(@RequestBody Usuario usuarioNuevo) {
+        Map<String, Object> respuesta = usuarioService.registrarOActualizarUsuario(usuarioNuevo);
+        return ResponseEntity.ok(respuesta);
     }
 
     @PostMapping("/login")
