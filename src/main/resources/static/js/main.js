@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function pintarTexto() {
     setTimeout(() => {
-      const input = entradaEditable.innerText.trim();
+      const input = entradaEditable.textContent;
       let resultado = '';
       let errorEncontrado = false;
 
