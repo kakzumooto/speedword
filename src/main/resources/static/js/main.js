@@ -1,11 +1,35 @@
 document.addEventListener("DOMContentLoaded", () => {
   const niveles = [
-    `public`,
-    `for`,
-    `if`,
-    `List<String>`,
-    `@RestController`
+    `public class HolaMundo {
+      public static void main(String[] args) {
+          System.out.println("¡Hola, mundo!");
+      }
+    }`,
+
+    `for (int i = 0; i < 5; i++) {
+      System.out.println("Iteración número: " + i);
+    }`,
+
+    `if (usuario.estaAutenticado()) {
+      mostrarDashboard();
+    } else {
+      redirigirAlLogin();
+    }`,
+
+    `List<String> tecnologias = new ArrayList<>();
+  tecnologias.add("Java");
+  tecnologias.add("Spring Boot");`,
+
+    `@RestController
+  public class SaludoController {
+
+      @GetMapping("/saludo")
+      public String saludar() {
+          return "¡Hola desde Spring Boot!";
+      }
+  }`
   ];
+
 
   let nivelActual = 0;
   let segundos = 0;
