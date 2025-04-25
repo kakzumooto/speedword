@@ -3,49 +3,58 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Speed Word - Juego de Escritura</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <title>SpeedWord</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/img/180x180.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/16x16.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/img/512x512.png" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
     <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
         #entradaEditable span.correcto {
-            color: green;
+          color: green;
         }
 
         #entradaEditable span.incorrecto {
-            color: red;
+          color: red;
         }
 
         #entradaEditable {
-            white-space: pre-wrap;
-            outline: none;
+          white-space: pre-wrap;
+          outline: none;
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+<!-- Contenedor principal -->
+<div class="w-full max-w-4xl bg-white rounded-2xl shadow-lg p-6 space-y-4">
+    <h1 class="text-3xl sm:text-4xl font-bold text-center text-blue-600">Speed Word 🧠💻</h1>
 
-<div class="max-w-3xl w-full bg-white rounded-2xl shadow-lg p-6 space-y-4">
-    <h1 class="text-3xl font-bold text-center text-blue-600">Speed Word 🧠💻</h1>
+    <!-- Texto a mostrar -->
+    <div id="textoAMostrar" class="border border-gray-300 rounded p-3 bg-gray-50 font-mono text-sm sm:text-base whitespace-pre-wrap text-gray-700"></div>
 
-    <div class="border border-gray-300 rounded p-3 bg-gray-50 font-mono text-sm whitespace-pre-wrap text-gray-700" id="textoAMostrar">
-        <!-- Código del nivel actual -->
-    </div>
-
+    <!-- Entrada editable -->
     <div
             id="entradaEditable"
-            class="w-full min-h-[180px] p-3 border-2 border-gray-300 rounded text-gray-800 font-mono text-sm bg-white"
+            class="w-full min-h-[180px] p-3 border-2 border-gray-300 rounded text-gray-800 font-mono text-sm sm:text-base bg-white"
             contenteditable="true"
             spellcheck="false"
     ></div>
 
-    <div class="flex justify-between items-center">
-        <p class="text-sm text-gray-600">Tiempo: <span id="tiempo">0</span> segundos</p>
-        <button id="reiniciar" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Reiniciar</button>
+    <!-- Tiempo y botón reiniciar -->
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+        <p class="text-sm text-gray-600">⏱️ Tiempo: <span id="tiempo">0</span> segundos</p>
+        <button id="reiniciar" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full sm:w-auto">Reiniciar</button>
     </div>
 </div>
 
 <!-- Formulario de Registro -->
-<div id="registroForm" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden">
-    <div class="bg-white rounded-xl shadow-lg p-6 w-96 space-y-4 text-center">
+<div id="registroForm" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-50 p-4">
+    <div class="bg-white rounded-xl shadow-lg p-6 w-full max-w-md space-y-4 text-center">
         <h2 class="text-xl font-semibold text-blue-600">Guardar récord</h2>
         <input type="text" id="usuarioInput" placeholder="Nombre de usuario" class="w-full p-2 border rounded text-gray-800" />
         <input type="password" id="passwordInput" placeholder="Contraseña" class="w-full p-2 border rounded text-gray-800" />
@@ -54,16 +63,16 @@
     </div>
 </div>
 
-<!-- Botón flotante para Top 10 -->
+<!-- Botón flotante Top 10 -->
 <button id="btnTop" class="fixed top-4 right-4 bg-yellow-400 p-3 rounded-full shadow-lg text-white hover:bg-yellow-500 z-50">
     <i class="fas fa-trophy"></i>
 </button>
 
 <!-- Modal Top 10 -->
-<div id="modalTop" class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden justify-center items-center z-40">
-    <div class="bg-white p-6 rounded-lg w-96">
+<div id="modalTop" class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden justify-center items-center z-40 p-4">
+    <div class="bg-white p-6 rounded-lg w-full max-w-md">
         <h2 class="text-2xl font-semibold mb-4">Top 10 Usuarios</h2>
-        <table id="tablaTop" class="min-w-full border-collapse">
+        <table id="tablaTop" class="min-w-full border-collapse text-sm">
             <thead>
             <tr>
                 <th class="border-b p-2">Posición</th>
@@ -73,21 +82,21 @@
             </thead>
             <tbody id="topList"></tbody>
         </table>
-        <button id="cerrarModal" class="mt-4 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600">Cerrar</button>
+        <button id="cerrarModal" class="mt-4 bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 w-full">Cerrar</button>
     </div>
 </div>
 
+<!-- Notificación flotante -->
 <div id="notificacion" class="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow-lg hidden z-50"></div>
+
 <!-- Modal de Bienvenida -->
-<div id="welcomeModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
-    <div class="bg-white rounded-2xl shadow-2xl p-6 max-w-md text-center space-y-4">
+<div id="welcomeModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md text-center space-y-4">
         <h2 class="text-2xl font-bold text-gray-800">👋 ¡Bienvenido a Speed Word!</h2>
         <p class="text-gray-600">🕹️ Escribe el código que aparece en pantalla lo más rápido posible. Si te equivocas, deberás corregir el error antes de continuar.</p>
         <p class="text-gray-600">⏱️ El tiempo total se acumula durante los 5 niveles. ¡Entre más rápido y preciso seas, mejor!</p>
         <p class="text-gray-600">🏆 Al final, podrás registrarte para ver si entraste al Top 10 o si rompiste tu récord anterior.</p>
-        <button onclick="cerrarModal()" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition">
-            ¡Entendido!
-        </button>
+        <button onclick="cerrarModal()" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition w-full">¡Entendido!</button>
     </div>
 </div>
 
@@ -96,8 +105,6 @@
       document.getElementById("welcomeModal").style.display = "none";
     }
 </script>
-
-
 
 <script src="js/main.js"></script>
 </body>
