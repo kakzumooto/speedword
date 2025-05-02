@@ -132,8 +132,30 @@ document.addEventListener("DOMContentLoaded", () => {
       sel.removeAllRanges();
       sel.addRange(range);
 
-      pintarTexto(); // Opcional, para actualizar la comparación
+
+
+      pintarTexto();
     }
+
+     if (e.key === "Tab") {
+        e.preventDefault(); // Evitamos que se salga del div
+
+        const sel = window.getSelection();
+        const range = sel.getRangeAt(0);
+        range.deleteContents();
+
+        // Puedes usar '\t' o '  ' para insertar espacios
+        const tabNode = document.createTextNode("  "); // 2 espacios como tab
+        range.insertNode(tabNode);
+
+        // Mover el cursor después del tab
+        range.setStartAfter(tabNode);
+        range.setEndAfter(tabNode);
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        pintarTexto();
+      }
   });
 
 
