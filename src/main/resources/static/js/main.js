@@ -115,6 +115,28 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
   });
 
+  entradaEditable.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); // Evitamos el salto de línea automático
+      // Insertamos un salto de línea real
+      const sel = window.getSelection();
+      const range = sel.getRangeAt(0);
+      range.deleteContents();
+
+      const saltoLinea = document.createTextNode("\n");
+      range.insertNode(saltoLinea);
+
+      // Mover el cursor después del salto de línea
+      range.setStartAfter(saltoLinea);
+      range.setEndAfter(saltoLinea);
+      sel.removeAllRanges();
+      sel.addRange(range);
+
+      pintarTexto(); // Opcional, para actualizar la comparación
+    }
+  });
+
+
   entradaEditable.addEventListener("input", pintarTexto);
 
   btnReiniciar.addEventListener("click", () => {
