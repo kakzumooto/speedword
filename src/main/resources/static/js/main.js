@@ -1,34 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
   const niveles = [
-    `public class HolaMundo {
-      public static void main(String[] args) {
-          System.out.println("¡Hello, mundo!");
-      }
-    }`,
-
-    `for (int i = 0; i < 5; i++) {
-      System.out.println("Iteración número: " + i);
-    }`,
-
-    `if (usuario.estaAutenticado()) {
-      mostrarDashboard();
-    } else {
-      redirigirAlLogin();
-    }`,
-
-    `List<String> tecnologias = new ArrayList<>();
-  tecnologias.add("Java");
-  tecnologias.add("Spring Boot");`,
-
-    `@RestController
-  public class SaludoController {
-
-      @GetMapping("/saludo")
-      public String saludar() {
-          return "¡Hola desde Spring Boot!";
-      }
-  }`
+    "hola mundo",
+    "mi gato se llama coco",
+    "el sol sale por el este y se oculta por el oeste",
+    "mañana vamos al parque con toda la familia a las diez",
+    "cuando el río suena, agua lleva, pero no siempre es verdad"
   ];
+
 
 
   let nivelActual = 0;
